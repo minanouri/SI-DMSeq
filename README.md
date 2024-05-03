@@ -1,1 +1,1 @@
-# SI-DMSeq
+# Self-Imputing Deep Multitask Sequence Model
