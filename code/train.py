@@ -3,6 +3,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import Sampler
 import numpy as np
+import os
 import math
 import random
 
@@ -68,9 +69,8 @@ def train(model, training_data, optimizer, criterion, validation_data=None, batc
     return loss_history
 
 
-root_dir = '../data/train/'
-csv_files = ['trafficData_part1.csv', 'trafficData_part2.csv', 'trafficData_part3.csv', 'trafficData_part4.csv', 
-             'trafficData_part5.csv', 'trafficData_part6.csv', 'trafficData_part7.csv', 'trafficData_part8.csv']
+root_dir = '../data/training/'
+csv_files = sorted([fn for fn in os.listdir(root_dir) if os.path.splitext(fn)[1] == '.csv'])
 seq_len = 24; y_len = 1; feature_size = 46
 training_data = TrafficDataset(root_dir, csv_files, seq_len, y_len, feature_size, mode='train')
 validation_data = TrafficDataset(root_dir, csv_files, seq_len, y_len, feature_size, mode='val')
