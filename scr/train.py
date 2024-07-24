@@ -64,7 +64,7 @@ def train(model, training_data, optimizer, criterion, validation_data=None, batc
             loss_history['val'].append(val_loss)
 
         if verbose:
-            print(f'epoch: {epoch}, train_loss: {round(train_loss,4)}, val_loss: {round(val_loss,4)}')
+            print(f'epoch: {epoch}, train_loss: {train_loss:.4f}, val_loss: {val_loss:.4f}')
 
     return loss_history
 
