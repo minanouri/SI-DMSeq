@@ -6,7 +6,7 @@ import numpy as np
 import os
 import math
 import random
-
+from tqdm.auto import tqdm
 from data_util import TrafficDataset, BatchSampler
 from model import MultitaskSequenceModel
 
@@ -26,7 +26,7 @@ def train(model, training_data, optimizer, criterion, validation_data=None, batc
     loss_history = dict(train=[], val=[])
     torch.manual_seed(4)
     random.seed(4)
-    for epoch in range(epochs):
+    for epoch in tqdm(range(epochs)):
         alpha = 2 - ((epoch+1)/epochs)**2; beta = ((epoch+1)/epochs)**2
         random.shuffle(S)
         batches = [S[i*batch_size:min(i*batch_size+batch_size, len(S))] for i in range(n_batch)]
@@ -34,8 +34,7 @@ def train(model, training_data, optimizer, criterion, validation_data=None, batc
         train_losses = []
         model.train()
         for i, (seq, seq_mask, y, y_mask) in enumerate(training_loader):
-            seq = seq.to(device); seq_mask = seq_mask.to(device)
-            y = y.to(device); y_mask = y_mask.to(device)
+            seq, seq_mask, y, y_mask = seq.to(device), seq_mask.to(device), y.to(device), y_mask.to(device)
             seq_recon, yhat = model(seq)
             loss_recon = criterion(alpha*(~seq_mask)*seq_recon, alpha*(~seq_mask)*seq) + criterion(beta*seq_mask*seq_recon, beta*seq_mask*seq)
             loss_pred = alpha * criterion(alpha*(~y_mask)*yhat, alpha*(~y_mask)*y)
@@ -50,13 +49,12 @@ def train(model, training_data, optimizer, criterion, validation_data=None, batc
         loss_history['train'].append(train_loss)
 
         if validation_data:
-            validation_loader = DataLoader(validation_data, batch_size=batch_size, shuffle=True)
+            validation_loader = DataLoader(validation_data, batch_size=batch_size)
             val_losses = []
             model = model.eval()
-            with torch.no_grad():
+            with torch.inference_mode():
                 for seq, seq_mask, y, y_mask in validation_loader:
-                    seq = seq.to(device); seq_mask = seq_mask.to(device)
-                    y = y.to(device); y_mask = y_mask.to(device)
+                    seq, seq_mask, y, y_mask = seq.to(device), seq_mask.to(device), y.to(device), y_mask.to(device)
                     seq_recon, yhat = model(seq)
                     loss = criterion(seq_recon, seq) + criterion(yhat, y)
                     val_losses.append(loss.item())
