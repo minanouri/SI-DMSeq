@@ -7,8 +7,8 @@ import os
 import math
 import random
 from tqdm.auto import tqdm
-from data_util import TrafficDataset, BatchSampler
-from model import MultitaskSequenceModel
+from src.data_utils import TrafficDataset, BatchSampler
+from src.model import MultitaskSequenceModel
 
 
 def get_device():
