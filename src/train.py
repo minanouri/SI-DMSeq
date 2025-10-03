@@ -67,17 +67,17 @@ def train(model, training_data, optimizer, criterion, validation_data=None, batc
     return loss_history
 
 
-root_dir = '../data/training/'
-csv_files = sorted([fn for fn in os.listdir(root_dir) if os.path.splitext(fn)[1] == '.csv'])
-seq_len = 24; y_len = 1; feature_size = 46
-training_data = TrafficDataset(root_dir, csv_files, seq_len, y_len, feature_size, mode='train')
-validation_data = TrafficDataset(root_dir, csv_files, seq_len, y_len, feature_size, mode='val')
+if __name__ == '__main__':
+    root_dir = '../data/training/'
+    csv_files = sorted([fn for fn in os.listdir(root_dir) if os.path.splitext(fn)[1] == '.csv'])
+    seq_len = 24; y_len = 1; feature_size = 46
+    training_data = TrafficDataset(root_dir, csv_files, seq_len, y_len, feature_size, mode='train')
+    validation_data = TrafficDataset(root_dir, csv_files, seq_len, y_len, feature_size, mode='val')
 
-torch.manual_seed(1)
-model = MultitaskSequenceModel(feature_size=feature_size, embedding_size=64, num_layers=2, dropout=0.2)
+    torch.manual_seed(1)
+    model = MultitaskSequenceModel(feature_size=feature_size, embedding_size=64, num_layers=2, dropout=0.2)
+    optimizer = optim.Adam(model.parameters(), lr=.01)
+    criterion = nn.MSELoss(reduction='sum')
 
-optimizer = optim.Adam(model.parameters(), lr=.01)
-criterion = nn.MSELoss(reduction='sum')
-
-loss_history = train(model, training_data, optimizer, criterion, validation_data, batch_size=64, epochs=20)
+    loss_history = train(model, training_data, optimizer, criterion, validation_data, batch_size=64, epochs=20)
 
