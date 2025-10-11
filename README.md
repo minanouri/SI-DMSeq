@@ -12,7 +12,7 @@ Urban traffic networks are highly vulnerable during extreme events, where disrup
 
 SI-DMSeq addresses these challenges in a unified framework by jointly performing traffic data imputation and anomaly detection. It not only completes missing traffic records but also detects disruptions at both the network and local scales, enabling dual-level insights into system-wide impacts and localized effects.
 
-Key features of the SI-DMSeq model include:
+Key features of the SI-DMSeq model:
 
 - **Unified multitask framework**: simultaneously performs traffic data imputation and anomaly detection.  
 - **Dual-level anomaly detection**: identifies disruptions at both the network and local (zone) levels through an autoencoder-based approach.
